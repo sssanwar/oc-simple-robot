@@ -12,21 +12,21 @@ prompts([
     message: 'Filepath (commands.txt)'
   }
 ])
-  .then(answers => {
-    const filepath = (answers.filepath as string) || 'commands.txt'
+  .then(async answers => {
     console.clear()
+    const filepath = (answers.filepath as string) || 'commands.txt'
+    const lines = await readInputFile(filepath)
 
-    readInputFile(filepath).then((lines: string[]) => {
-      console.log()
-      console.log('Starting game...')
-      console.log()
+    console.log()
+    console.log('Starting game...')
+    console.log()
 
-      const initCommand = parseFirstLineCommand(lines[0])
-      const robotCommands = parseSecondLineCommand(lines[1])
+    const initCommand = parseFirstLineCommand(lines[0])
+    const robotCommands = parseSecondLineCommand(lines[1])
 
-      const engine = new GameEngine(100, 100)
-      engine.init(initCommand)
-      robotCommands?.forEach(c => engine.sendCommand(c))
-    })
+    const engine = new GameEngine(100, 100)
+    engine.init(initCommand)
+    engine.asObservable().subscribe(res => console.log(res.alias))
+    robotCommands?.forEach(c => engine.sendCommand(c))
   })
   .catch(err => console.log(err))

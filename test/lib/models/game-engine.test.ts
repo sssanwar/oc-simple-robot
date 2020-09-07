@@ -1,6 +1,6 @@
 import { GameEngine } from '../../../src/lib/models/game-engine.model'
 import { parseCommandString } from '../../../src/lib/common/utils'
-import { take, finalize } from 'rxjs/operators'
+import { take, finalize, map } from 'rxjs/operators'
 import { CompassPoint } from '../../../src/lib/models/types.model'
 
 describe('Game Engine tests', () => {
@@ -19,6 +19,7 @@ describe('Game Engine tests', () => {
       .asObservable()
       .pipe(
         take(cmdLines.second.length),
+        map(res => res),
         finalize(() => {
           expect(commandCount).toEqual(cmdLines.second.length)
           const robot = engine.findRobot()
@@ -27,7 +28,10 @@ describe('Game Engine tests', () => {
           return done()
         })
       )
-      .subscribe(() => commandCount++)
+      .subscribe(res => {
+        commandCount++
+        console.log(res.alias)
+      })
 
     expect(() => engine.sendCommand(cmdLines.second[0])).toThrowError(/not initialised/)
 

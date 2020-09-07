@@ -4,6 +4,7 @@ import { translateCoordinate } from '../common/utils'
 
 export class WorldMap implements MapService {
   private _matrix: Array<Array<Cell>>
+  private _mapIndex = new Map<string, Coordinate>()
   private _occupiers = new Array<Occupier>()
 
   constructor(width: number, height: number) {
@@ -22,15 +23,21 @@ export class WorldMap implements MapService {
     const cells = this.calculateFootprint(occupier.width, occupier.height, position)
     cells.forEach(c => (c.occupierId = occupier.id))
     this._occupiers.push(occupier)
+    this._mapIndex.set(occupier.id, cells[0].coordinate)
   }
 
   clear(occupier: Occupier) {
     const cells = this.calculateFootprint(occupier.width, occupier.height, occupier.position)
     cells.forEach(c => c.clear())
+    this._mapIndex.delete(occupier.id)
     this._occupiers = this._occupiers.filter(o => o.id !== occupier.id)
   }
 
   findPosition(occupierId: string): Coordinate | undefined {
+    return this._mapIndex.get(occupierId)
+  }
+
+  scanPosition(occupierId: string): Coordinate | undefined {
     // This is the scanning method and it is slow.
     // In real world, this can be optimised using cache, index, and/or additional tracking logic.
     for (let x = 0; x < this._matrix.length; x++) {

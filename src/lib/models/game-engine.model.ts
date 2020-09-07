@@ -19,7 +19,7 @@ export class GameEngine {
     this._worldMap.put(robot, command.position)
     this._initDone = true
     console.log(`Robot created  : ${id}`)
-    console.log(`Robot location : ${CompassPoint[command.compassPoint]} ${command.position.x} ${command.position.y}`)
+    console.log(`Robot location : ${robot.positionString()}`)
     console.log('')
     console.log('Movements:')
   }

@@ -16,6 +16,7 @@ export class Compass {
     if (this._pointDegree > 360) this._pointDegree %= 360
     else if (this._pointDegree < 0) this._pointDegree += 360
     else if (this._pointDegree === 360) this._pointDegree = 0
+    return this.point
   }
 
   get point(): CompassPoint {

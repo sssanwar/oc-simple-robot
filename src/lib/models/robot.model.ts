@@ -26,32 +26,23 @@ export class Robot implements Occupier {
   }
 
   forward(steps: number) {
-    return repeatTask(
-      steps,
-      () => this.move(),
-      () => this.logPosition()
-    )
+    return repeatTask(steps, () => this.move())
   }
 
   reverse(steps: number) {
-    return repeatTask(
-      steps,
-      () => this.move(true),
-      () => this.logPosition()
-    )
+    return repeatTask(steps, () => this.move(true))
   }
 
   rotate(rotateDir: RotateDirection, count: number) {
-    return repeatTask(
-      count,
-      () => this._compass.rotate(rotateDir),
-      () => this.logPosition()
-    )
+    return repeatTask(count, async () => {
+      await this._compass.rotate(rotateDir)
+      return { compassPoint: this.direction, position: this.position, alias: this.positionString() }
+    })
   }
 
-  logPosition() {
+  positionString() {
     const pos = this.position ? `${this.position.x} ${this.position.y}` : '- -'
-    console.log(`${CompassPoint[this.direction]} ${pos}`)
+    return `${CompassPoint[this.direction]} ${pos}`
   }
 
   private async move(isReverse?: boolean) {
@@ -59,6 +50,7 @@ export class Robot implements Occupier {
     const projectedPos = this.projectMovePos(isReverse)
     this._mapService.clear(this)
     this._mapService.put(this, projectedPos)
+    return { compassPoint: this.direction, position: this.position, alias: this.positionString() }
   }
 
   private projectMovePos(isReverse?: boolean): Coordinate {
