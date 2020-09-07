@@ -1,5 +1,5 @@
 import { WorldMap } from './world-map.model'
-import { RobotCommand, InitCommand, ActionType, RotateDirection, CompassPoint } from './types.model'
+import { RobotCommand, InitCommand, ActionType, RotateDirection, CompassPoint, RobotLocation } from './types.model'
 import shortid from 'shortid'
 import { Robot } from './robot.model'
 import { ObservableQueue } from '../common/observable-queue'
@@ -7,7 +7,7 @@ import { ObservableQueue } from '../common/observable-queue'
 export class GameEngine {
   private _worldMap: WorldMap
   private _initDone = false
-  private _commandQueue = new ObservableQueue<any>()
+  private _commandQueue = new ObservableQueue<RobotLocation>()
 
   constructor(mapWidth: number, mapHeight: number) {
     this._worldMap = new WorldMap(mapWidth, mapHeight)
@@ -49,7 +49,11 @@ export class GameEngine {
       case ActionType.R:
         return robot.rotate(RotateDirection.R, command.count!)
       default:
-        return Promise.resolve()
+        return Promise.resolve<RobotLocation>({
+          compassPoint: CompassPoint.N,
+          position: { x: -1, y: -1 },
+          alias: 'Invalid RobotCommand Sent'
+        })
     }
   }
 }

@@ -25,6 +25,12 @@ export enum ActionType {
   R
 }
 
+export interface RobotLocation {
+  compassPoint: CompassPoint
+  position: Coordinate
+  alias: string
+}
+
 export interface MapService {
   findPosition: (occupierId: string) => Coordinate | undefined
   put: (occupier: Occupier, position: Coordinate) => void

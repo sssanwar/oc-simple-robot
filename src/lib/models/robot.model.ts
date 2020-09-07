@@ -1,4 +1,4 @@
-import { Occupier, CompassPoint, RotateDirection, Coordinate, MapService } from './types.model'
+import { Occupier, CompassPoint, RotateDirection, Coordinate, MapService, RobotLocation } from './types.model'
 import { Compass } from './compass.model'
 import { wait, repeatTask } from '../common/utils'
 
@@ -36,7 +36,7 @@ export class Robot implements Occupier {
   rotate(rotateDir: RotateDirection, count: number) {
     return repeatTask(count, async () => {
       await this._compass.rotate(rotateDir)
-      return { compassPoint: this.direction, position: this.position, alias: this.positionString() }
+      return { compassPoint: this.direction, position: this.position, alias: this.positionString() } as RobotLocation
     })
   }
 
@@ -50,7 +50,7 @@ export class Robot implements Occupier {
     const projectedPos = this.projectMovePos(isReverse)
     this._mapService.clear(this)
     this._mapService.put(this, projectedPos)
-    return { compassPoint: this.direction, position: this.position, alias: this.positionString() }
+    return { compassPoint: this.direction, position: this.position, alias: this.positionString() } as RobotLocation
   }
 
   private projectMovePos(isReverse?: boolean): Coordinate {

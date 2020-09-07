@@ -11,7 +11,7 @@ export const translateCoordinate = (pos: number, max: number) => {
   else return pos
 }
 
-export const repeatTask = (repeat: number, task: () => Promise<any>, endWithFn?: () => void) =>
+export const repeatTask = <T>(repeat: number, task: () => Promise<T>, endWithFn?: () => void) =>
   from(new Array(repeat).fill(null).map(() => task()))
     .pipe(
       concatMap(p => from(p).pipe(map(res => res))),
