@@ -3,8 +3,6 @@ import { GameEngine } from './lib/models/game-engine.model'
 import { readInputFile } from './lib/common/file-utils'
 import { parseFirstLineCommand, parseSecondLineCommand } from './lib/common/utils'
 
-console.log('Reading commands...')
-
 prompts([
   {
     type: 'text',
