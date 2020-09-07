@@ -19,7 +19,6 @@ describe('Game Engine tests', () => {
       .asObservable()
       .pipe(
         take(cmdLines.second.length),
-        map(res => res),
         finalize(() => {
           expect(commandCount).toEqual(cmdLines.second.length)
           const robot = engine.findRobot()

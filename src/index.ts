@@ -26,6 +26,10 @@ prompts([
 
     const engine = new GameEngine(100, 100)
     engine.init(initCommand)
+
+    console.log('')
+    console.log('Movements:')
+
     engine.asObservable().subscribe(res => console.log(res.alias))
     robotCommands?.forEach(c => engine.sendCommand(c))
   })

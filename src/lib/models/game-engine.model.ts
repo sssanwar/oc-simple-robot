@@ -20,8 +20,6 @@ export class GameEngine {
     this._initDone = true
     console.log(`Robot created  : ${id}`)
     console.log(`Robot location : ${robot.positionString()}`)
-    console.log('')
-    console.log('Movements:')
   }
 
   sendCommand(command: RobotCommand) {
