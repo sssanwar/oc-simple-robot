@@ -3,13 +3,10 @@ import { WorldMap } from '../../../src/lib/models/world-map.model'
 import { Robot } from '../../../src/lib/models/robot.model'
 
 describe('Robot Tests', () => {
-  let worldMap: WorldMap
-
-  beforeAll(() => {
-    worldMap = new WorldMap(100, 100)
-  })
+  beforeAll(() => {})
 
   it('returns correct direction after creation and rotations', async () => {
+    const worldMap = new WorldMap(100, 100)
     const robot = new Robot('R2-D2', worldMap, CompassPoint.S, 1)
     expect(robot.direction).toEqual(CompassPoint.S)
 
@@ -27,6 +24,7 @@ describe('Robot Tests', () => {
   })
 
   it('moves to the correct position after forward and reverse', async () => {
+    const worldMap = new WorldMap(100, 100)
     const robot = new Robot('R2-D2', worldMap, 0, 1)
     expect(robot.direction).toEqual(CompassPoint.N)
 
@@ -40,8 +38,21 @@ describe('Robot Tests', () => {
     expect(robot.position).toEqual({ x: 0, y: 0 })
   })
 
+  it('moves to the correct position after crossing boundary', async () => {
+    const worldMap = new WorldMap(100, 100)
+    const robot = new Robot('R2-D2', worldMap, 0, 1)
+    worldMap.put(robot, { x: 99, y: 99 })
+
+    await robot.forward(2)
+    expect(robot.position).toEqual({ x: 99, y: 1 })
+
+    await robot.rotate(RotateDirection.R, 1)
+    await robot.forward(3)
+    expect(robot.position).toEqual({ x: 2, y: 1 })
+  })
+
   it('has correct final position', async () => {
-    worldMap = new WorldMap(100, 100)
+    const worldMap = new WorldMap(100, 100)
     const robot = new Robot('R2-D2', worldMap, 0, 200)
     worldMap.put(robot, { x: 0, y: 0 })
 

@@ -1,25 +1,25 @@
-import { WorldMap } from './world-map.model'
-import { RobotCommand, InitCommand, ActionType, RotateDirection, CompassPoint, RobotLocation } from './types.model'
+import { RobotCommand, InitCommand, ActionType, RotateDirection, RobotLocationData, MapService } from './types.model'
 import shortid from 'shortid'
 import { Robot } from './robot.model'
 import { ObservableQueue } from '../common/observable-queue'
 
 export class GameEngine {
-  private _worldMap: WorldMap
+  private _mapService: MapService
   private _initDone = false
-  private _commandQueue = new ObservableQueue<RobotLocation>()
+  private _commandQueue = new ObservableQueue<RobotLocationData>()
+  private _robotId: string = 'none' // We shouldn't need this here...
 
-  constructor(mapWidth: number, mapHeight: number) {
-    this._worldMap = new WorldMap(mapWidth, mapHeight)
+  constructor(mapService: MapService) {
+    this._mapService = mapService
   }
 
   init(command: InitCommand) {
-    const id = shortid()
-    const robot = new Robot(id, this._worldMap, command.compassPoint)
-    this._worldMap.put(robot, command.position)
+    this._robotId = shortid()
+    const robot = new Robot(this._robotId, this._mapService, command.compassPoint)
+    this._mapService.put(robot, command.position)
     this._initDone = true
-    console.log(`Robot created  : ${id}`)
-    console.log(`Robot location : ${robot.positionString()}`)
+    console.log(`Robot created: ${this._robotId}`)
+    this.sendCommand({ type: ActionType.NONE, id: this._robotId, count: 1 })
   }
 
   sendCommand(command: RobotCommand) {
@@ -34,12 +34,12 @@ export class GameEngine {
   findRobot() {
     // This method only is for testing, in real world we would not need this.
     if (!this._initDone) throw new Error('Engine not initialised yet.')
-    return this._worldMap.findFirstOccupier() as Robot
+    return this._mapService.findOccupierById(this._robotId) as Robot
   }
 
   private processCommand(command: RobotCommand) {
-    // Ideally we want to find by ID, but the sent command does not include IDs!
-    const robot = (this._worldMap.findFirstOccupier() as Robot)!
+    // We use temporary robotId because the sent command does not include IDs!
+    const robot = (this._mapService.findOccupierById(command.id || this._robotId) as Robot)!
 
     switch (command.type) {
       case ActionType.M:
@@ -49,11 +49,7 @@ export class GameEngine {
       case ActionType.R:
         return robot.rotate(RotateDirection.R, command.count!)
       default:
-        return Promise.resolve<RobotLocation>({
-          compassPoint: CompassPoint.N,
-          position: { x: -1, y: -1 },
-          alias: 'Invalid RobotCommand Sent'
-        })
+        return Promise.resolve<RobotLocationData>(robot.getPositionalData())
     }
   }
 }

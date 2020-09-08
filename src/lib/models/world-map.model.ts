@@ -20,14 +20,14 @@ export class WorldMap implements MapService {
   }
 
   put(occupier: Occupier, position: Coordinate) {
-    const cells = this.calculateFootprint(occupier.width, occupier.height, position)
+    const cells = this.getFootprintCells(occupier.width, occupier.height, position)
     cells.forEach(c => (c.occupierId = occupier.id))
     this._occupiers.push(occupier)
     this._mapIndex.set(occupier.id, cells[0].coordinate)
   }
 
   clear(occupier: Occupier) {
-    const cells = this.calculateFootprint(occupier.width, occupier.height, occupier.position)
+    const cells = this.getFootprintCells(occupier.width, occupier.height, occupier.position)
     cells.forEach(c => c.clear())
     this._mapIndex.delete(occupier.id)
     this._occupiers = this._occupiers.filter(o => o.id !== occupier.id)
@@ -48,19 +48,25 @@ export class WorldMap implements MapService {
     return undefined
   }
 
-  calculateFootprint(width: number, height: number, position: Coordinate) {
+  getFootprintCells(width: number, height: number, position: Coordinate) {
     const cells = new Array<Cell>()
     for (let x = position.x; x < position.x + width; x++) {
       for (let y = position.y; y < position.y + height; y++) {
-        const translatedX = translateCoordinate(x, this._matrix.length - 1)
-        const translatedY = translateCoordinate(y, this._matrix[0].length - 1)
+        const translatedX = translateCoordinate(x, this._matrix.length)
+        const translatedY = translateCoordinate(y, this._matrix[0].length)
         cells.push(this._matrix[translatedX][translatedY])
       }
     }
     return cells
   }
 
-  getAllOccupiersFootprint() {
-    return Array.from(this._occupiers).flatMap(o => this.calculateFootprint(o.width, o.height, o.position))
+  getFootprintCoordinates(occupierId: string) {
+    const occupier = this.findOccupierById(occupierId)
+    const cells = occupier ? this.getFootprintCells(occupier.width, occupier.height, occupier.position) : undefined
+    return cells?.map(c => c.coordinate)
+  }
+
+  getAllOccupiersFootprint(): Cell[] {
+    return Array.from(this._occupiers).flatMap(o => this.getFootprintCells(o.width, o.height, o.position))
   }
 }

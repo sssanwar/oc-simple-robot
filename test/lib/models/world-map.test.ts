@@ -6,7 +6,7 @@ describe('Worldmap Tests', () => {
 
   it('calculates correct footprint', () => {
     const map = new WorldMap(100, 100)
-    const cells = map.calculateFootprint(2, 2, { x: 0, y: 0 })
+    const cells = map.getFootprintCells(2, 2, { x: 0, y: 0 })
     expect(cells).toHaveLength(4)
     expect(cells.find(c => c.coordinate.x === 0 && c.coordinate.y === 0)).toBeTruthy()
     expect(cells.find(c => c.coordinate.x === 1 && c.coordinate.y === 1)).toBeTruthy()

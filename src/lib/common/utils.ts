@@ -6,8 +6,8 @@ export const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, m
 
 export const translateCoordinate = (pos: number, max: number) => {
   // Add 1 because we start from zero
-  if (pos < 0) return pos + max + 1
-  else if (pos > max) return pos % max
+  if (pos < 0) return pos + max
+  else if (pos >= max) return pos % max
   else return pos
 }
 

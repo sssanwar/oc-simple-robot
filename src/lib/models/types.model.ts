@@ -1,4 +1,7 @@
-export type Coordinate = { x: number; y: number }
+export interface Coordinate {
+  x: number
+  y: number
+}
 
 export interface Occupier {
   id: string
@@ -22,16 +25,24 @@ export enum CompassPoint {
 export enum ActionType {
   M,
   L,
-  R
+  R,
+  NONE
 }
 
-export interface RobotLocation {
-  compassPoint: CompassPoint
+export interface OccupierLocationData {
+  id: string
   position: Coordinate
+  footprints: Coordinate[]
+}
+
+export interface RobotLocationData extends OccupierLocationData {
+  compassPoint: CompassPoint
   alias: string
 }
 
 export interface MapService {
+  getFootprintCoordinates: (occupierId: string) => Coordinate[] | undefined
+  findOccupierById: (occupierId: string) => Occupier | undefined
   findPosition: (occupierId: string) => Coordinate | undefined
   put: (occupier: Occupier, position: Coordinate) => void
   clear: (occupier: Occupier) => void
