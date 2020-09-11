@@ -1,6 +1,6 @@
 import { CompassPoint, ActionType, RobotCommand, InitCommand } from '../models/types.model'
 import { from, of } from 'rxjs'
-import { concatMap, map, finalize, delay, repeat, toArray, tap } from 'rxjs/operators'
+import { concatMap, map, finalize, repeat } from 'rxjs/operators'
 
 export const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -18,8 +18,8 @@ export const repeatTask = <T>(count: number, task: () => Promise<T>, endWithFn?:
   )
 }
 
-const getEnumValByName = <T>(enumType: object, name: string): T => {
-  return Object.values(enumType).find((x: string) => enumType[x] === name)
+const getEnumValByName = <T>(enumType: any, name: string): T => {
+  return Object.values(enumType).find((x: any) => enumType[x] === name) as T
 }
 
 export const parseFirstLineCommand = (input: string): InitCommand => {
