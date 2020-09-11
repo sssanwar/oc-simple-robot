@@ -4,18 +4,20 @@ import { Robot } from './robot.model'
 import { ObservableQueue } from '../common/observable-queue'
 
 export class GameEngine {
+  private _delay: number = 0
   private _mapService: MapService
   private _initDone = false
   private _commandQueue = new ObservableQueue<RobotLocationData>()
   private _robotId: string = 'none' // We shouldn't need this here...
 
-  constructor(mapService: MapService) {
+  constructor(mapService: MapService, delay?: number) {
     this._mapService = mapService
+    this._delay = delay || 0
   }
 
   init(command: InitCommand) {
     this._robotId = shortid()
-    const robot = new Robot(this._robotId, this._mapService, command.compassPoint)
+    const robot = new Robot(this._robotId, this._mapService, command.compassPoint, this._delay)
     this._mapService.put(robot, command.position)
     this._initDone = true
     console.log(`Robot created: ${this._robotId}`)

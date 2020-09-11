@@ -13,8 +13,7 @@ describe('Utils tests', () => {
   it('repeats promise', async () => {
     let lastNumber = 0
     const p = () => Promise.resolve().then(() => lastNumber++)
-    await repeatTask(5, p)
-    expect(lastNumber).toEqual(5)
+    repeatTask(5, p).subscribe(val => expect(val).toEqual(5))
   })
 
   it('parses first command', () => {
