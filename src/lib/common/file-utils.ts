@@ -8,7 +8,7 @@ export const readInputFile = async (filepath: string) => {
   const lines: string[] = []
   let lineCount = 0
 
-  await new Promise<string[]>(resolve => {
+  return await new Promise<string[]>(resolve => {
     readFileInterface(filepath)
       .on('line', line => {
         lines.push(line)
@@ -17,6 +17,4 @@ export const readInputFile = async (filepath: string) => {
       })
       .on('close', () => resolve(lines))
   })
-
-  return lines
 }

@@ -5,7 +5,6 @@ import { concatMap, map, finalize } from 'rxjs/operators'
 export const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 export const translateCoordinate = (pos: number, max: number) => {
-  // Add 1 because we start from zero
   if (pos < 0) return pos + max
   else if (pos >= max) return pos % max
   else return pos
@@ -19,9 +18,8 @@ export const repeatTask = <T>(repeat: number, task: () => Promise<T>, endWithFn?
     )
     .toPromise()
 
-const getEnumValByName = <T>(enumType: any, name: string): T | undefined => {
-  let keys = Object.values(enumType).filter((x: any) => enumType[x] === name)
-  return keys.length > 0 ? (keys[0] as T) : undefined
+const getEnumValByName = <T>(enumType: object, name: string): T => {
+  return Object.values(enumType).find((x: string) => enumType[x] === name)
 }
 
 export const parseFirstLineCommand = (input: string): InitCommand => {
