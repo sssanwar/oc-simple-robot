@@ -33,12 +33,6 @@ export class GameEngine {
     return this._commandQueue.asObservable()
   }
 
-  findRobot() {
-    // This method only is for testing, in real world we would not need this.
-    if (!this._initDone) throw new Error('Engine not initialised yet.')
-    return this._mapService.findOccupierById(this._robotId) as Robot
-  }
-
   private processCommand(command: RobotCommand) {
     // We use temporary robotId because the sent command does not include IDs!
     const robot = (this._mapService.findOccupierById(command.id || this._robotId) as Robot)!
