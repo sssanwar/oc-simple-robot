@@ -15,6 +15,11 @@ export enum RotateDirection {
   R = 90
 }
 
+export interface CompassData {
+  point: CompassPoint
+  degree: number
+}
+
 export enum CompassPoint {
   N = 0,
   E = 90,
@@ -36,7 +41,7 @@ export interface OccupierLocationData {
 }
 
 export interface RobotLocationData extends OccupierLocationData {
-  compassPoint: CompassPoint
+  compassData: CompassData
   alias: string
 }
 

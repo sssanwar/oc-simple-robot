@@ -1,24 +1,33 @@
-import { RotateDirection, CompassPoint } from './types.model'
+import { RotateDirection, CompassPoint, CompassData } from './types.model'
 import { wait } from '../common/utils'
 
 export class Compass {
-  private _pointDegree: number = 0
-  private _delay = 0
+  private _compassData: CompassData = { degree: 0, point: CompassPoint.N }
+  private _delay: number
 
   constructor(compassPoint?: CompassPoint, delay?: number) {
-    if (compassPoint) this._pointDegree = compassPoint as number
-    if (delay) this._delay = delay
+    this._delay = delay || 0
+
+    if (compassPoint) {
+      this._compassData.degree = compassPoint as number
+      this._compassData.point = compassPoint
+    }
+  }
+
+  get compassData() {
+    return this._compassData
   }
 
   async rotate(rotateDir: RotateDirection) {
     await wait(this._delay)
-    this._pointDegree += rotateDir
-    if (this._pointDegree >= 360) this._pointDegree %= 360
-    else if (this._pointDegree < 0) this._pointDegree += 360
-    return this.point
+    this._compassData.degree += rotateDir
+    this._compassData.point = this.calculatePoint(this._compassData.degree)
+    return this._compassData
   }
 
-  get point(): CompassPoint {
-    return this._pointDegree as CompassPoint
+  private calculatePoint(degree: number): CompassPoint {
+    let compassPoint = degree % 360
+    if (degree < 0) compassPoint = degree += 360
+    return compassPoint
   }
 }

@@ -22,7 +22,7 @@ export class Robot implements Occupier {
   }
 
   get direction() {
-    return this._compass.point
+    return this._compass.compassData
   }
 
   forward(steps: number) {
@@ -42,13 +42,13 @@ export class Robot implements Occupier {
 
   positionString() {
     const pos = this.position ? `${this.position.x} ${this.position.y}` : '- -'
-    return `${CompassPoint[this.direction]} ${pos}`
+    return `${CompassPoint[this.direction.point]} ${pos}`
   }
 
   getPositionalData(): RobotLocationData {
     return {
       id: this.id,
-      compassPoint: this.direction,
+      compassData: this.direction,
       position: this.position,
       footprints: this._mapService.getFootprintCoordinates(this.id)!,
       alias: this.positionString()
@@ -68,7 +68,7 @@ export class Robot implements Occupier {
     let xStep = 0
     let yStep = 0
 
-    switch (this.direction) {
+    switch (this.direction.point) {
       case CompassPoint.N:
         yStep = 1 * sigFlag
         break

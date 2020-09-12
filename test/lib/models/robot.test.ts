@@ -8,18 +8,18 @@ describe('Robot Tests', () => {
   it('returns correct direction after creation and rotations', async () => {
     const worldMap = new WorldMap(100, 100)
     const robot = new Robot('R2-D2', worldMap, CompassPoint.S, 1)
-    expect(robot.direction).toEqual(CompassPoint.S)
+    expect(robot.direction.point).toEqual(CompassPoint.S)
 
-    robot.rotate(RotateDirection.L, 1).subscribe(() => expect(robot.direction).toEqual(CompassPoint.E))
-    robot.rotate(RotateDirection.R, 1).subscribe(() => expect(robot.direction).toEqual(CompassPoint.S))
-    robot.rotate(RotateDirection.R, 2).subscribe(() => expect(robot.direction).toEqual(CompassPoint.N))
-    robot.rotate(RotateDirection.R, 3).subscribe(() => expect(robot.direction).toEqual(CompassPoint.W))
+    robot.rotate(RotateDirection.L, 1).subscribe(() => expect(robot.direction.point).toEqual(CompassPoint.E))
+    robot.rotate(RotateDirection.R, 1).subscribe(() => expect(robot.direction.point).toEqual(CompassPoint.S))
+    robot.rotate(RotateDirection.R, 2).subscribe(() => expect(robot.direction.point).toEqual(CompassPoint.N))
+    robot.rotate(RotateDirection.R, 3).subscribe(() => expect(robot.direction.point).toEqual(CompassPoint.W))
   })
 
   it('moves to the correct position after forward and reverse', async () => {
     const worldMap = new WorldMap(100, 100)
     const robot = new Robot('R2-D2', worldMap, 0, 1)
-    expect(robot.direction).toEqual(CompassPoint.N)
+    expect(robot.direction.point).toEqual(CompassPoint.N)
 
     worldMap.put(robot, { x: 0, y: 0 })
     expect(robot.position).toEqual({ x: 0, y: 0 })
@@ -48,7 +48,7 @@ describe('Robot Tests', () => {
     robot.forward(4)
     robot.rotate(RotateDirection.L, 3)
     robot.forward(2).subscribe(() => {
-      expect(robot.direction).toEqual(CompassPoint.S)
+      expect(robot.direction.point).toEqual(CompassPoint.S)
       expect(robot.position).toEqual({ x: 4, y: 99 })
     })
   })

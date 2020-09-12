@@ -27,7 +27,7 @@ describe('Game Engine tests', () => {
         finalize(() => {
           expect(commandCount).toEqual(expCommandCount)
           const robot = worldMap.findOccupierById(robotId) as Robot
-          expect(robot.direction).toEqual(CompassPoint.S)
+          expect(robot.direction.point).toEqual(CompassPoint.S)
           expect(robot.position).toEqual({ x: 4, y: 99 })
           console.log(`Final commandCount: ${commandCount}`)
           return done()

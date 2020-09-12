@@ -4,16 +4,16 @@ import { CompassPoint, RotateDirection } from '../../../src/lib/models/types.mod
 describe('Compass Tests', () => {
   it('returns correct direction after rotations', async () => {
     const compass = new Compass(CompassPoint.W)
-    expect(compass.point).toEqual(CompassPoint.W)
+    expect(compass.compassData.point).toEqual(CompassPoint.W)
 
     await compass.rotate(RotateDirection.R)
-    expect(compass.point).toEqual(CompassPoint.N)
+    expect(compass.compassData.point).toEqual(CompassPoint.N)
 
     await compass.rotate(RotateDirection.R)
-    expect(compass.point).toEqual(CompassPoint.E)
+    expect(compass.compassData.point).toEqual(CompassPoint.E)
 
     await compass.rotate(RotateDirection.L)
     await compass.rotate(RotateDirection.L)
-    expect(compass.point).toEqual(CompassPoint.W)
+    expect(compass.compassData.point).toEqual(CompassPoint.W)
   })
 })
