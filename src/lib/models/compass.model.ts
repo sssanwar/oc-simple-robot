@@ -20,8 +20,11 @@ export class Compass {
 
   async rotate(rotateDir: RotateDirection) {
     await wait(this._delay)
-    this._compassData.degree += rotateDir
-    this._compassData.point = this.calculatePoint(this._compassData.degree)
+    const newDegree = this._compassData.degree + rotateDir
+    this._compassData = {
+      degree: newDegree,
+      point: this.calculatePoint(newDegree)
+    }
     return this._compassData
   }
 
