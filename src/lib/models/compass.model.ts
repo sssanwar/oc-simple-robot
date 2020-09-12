@@ -30,7 +30,7 @@ export class Compass {
 
   private calculatePoint(degree: number): CompassPoint {
     let compassPoint = degree % 360
-    if (degree < 0) compassPoint = degree += 360
+    if (compassPoint < 0) compassPoint += 360
     return compassPoint
   }
 }
